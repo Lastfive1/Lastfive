@@ -1,4 +1,9 @@
 import javafx.application.Application;
+import javafx.animation.AnimationTimer;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -10,9 +15,8 @@ public class Map extends Application {
 	double simonX,simonY;
 	public static void main(String[] args) {
 		launch(args);
-
 	}
-
+	
 	public void start(Stage primaryStage) throws Exception {
 		Group root = new Group();
 		Scene scene = new Scene(root, 500,500);
@@ -34,11 +38,33 @@ public class Map extends Application {
 		Line door = new Line(145,440,145,490);
 		door.setFill(Color.GREEN);
 		root.getChildren().addAll(stage,end,Simon,room1,room1pt2,keyroom,keyroompt2,keyroompt3,room2,door);
-		
-		
-		
+		AnimationTimer timer = new AnimationTimer() {
+			@Override
+			public void handle(long arg0) {
+				upDate();
+				
+			}
+		};
+		timer.start();
+		public void upDate()
+		{
+			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+				@Override
+				public void handle(KeyEvent event) {
+					if(event.getCode() == KeyCode.UP)
+						simonY += simonY -5;
+					else if(event.getCode() == KeyCode.DOWN)
+						simonY += simonY +5;
+					else if(event.getCode() == KeyCode.RIGHT)
+						simonX += simonX +5;
+					else if(event.getCode() == KeyCode.LEFT)
+						simonX += simonX -5;
+				}
+			});
+		}
 		primaryStage.setTitle("Anthropocene");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+	
 }
