@@ -13,13 +13,15 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Line;
 public class Map extends Application {
 	double simonX,simonY;
+	private Circle Simon;
+	private Scene scene;
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
 	public void start(Stage primaryStage) throws Exception {
 		Group root = new Group();
-		Scene scene = new Scene(root, 500,500);
+		scene = new Scene(root, 500,500);
 		simonX = 30;
 		simonY = 30;
 		scene.setFill(Color.TURQUOISE);
@@ -27,7 +29,7 @@ public class Map extends Application {
 		Rectangle end = new Rectangle(420,440,70,50);
 		end.setFill(Color.GOLD);
 		stage.setFill(Color.WHITE);
-		Circle Simon = new Circle(simonX, simonY, 15);
+		Simon = new Circle(simonX, simonY, 15);
 		Simon.setFill(Color.BLACK);
 		Line room1 = new Line(10,150,280,150);
 		Line room1pt2 = new Line(360,150,490,150);
@@ -38,33 +40,33 @@ public class Map extends Application {
 		Line door = new Line(145,440,145,490);
 		door.setFill(Color.GREEN);
 		root.getChildren().addAll(stage,end,Simon,room1,room1pt2,keyroom,keyroompt2,keyroompt3,room2,door);
-		AnimationTimer timer = new AnimationTimer() {
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
+			public void handle(KeyEvent event) {
+				if(event.getCode() == KeyCode.W)
+					simonY -= 3;
+				else if(event.getCode() == KeyCode.S)
+					simonY += 3;
+				else if(event.getCode() == KeyCode.D)
+					simonX +=  +3;
+				else if(event.getCode() == KeyCode.A)
+					simonX -= 3;
+			}
+		});	
+		
+		AnimationTimer timer = new AnimationTimer() {
 			public void handle(long arg0) {
 				upDate();
-				
 			}
 		};
 		timer.start();
-		public void upDate()
-		{
-			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-				@Override
-				public void handle(KeyEvent event) {
-					if(event.getCode() == KeyCode.UP)
-						simonY += simonY -5;
-					else if(event.getCode() == KeyCode.DOWN)
-						simonY += simonY +5;
-					else if(event.getCode() == KeyCode.RIGHT)
-						simonX += simonX +5;
-					else if(event.getCode() == KeyCode.LEFT)
-						simonX += simonX -5;
-				}
-			});
-		}
+		
 		primaryStage.setTitle("Anthropocene");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-	
+	public void upDate(){
+	Simon.setCenterX(simonX);
+	Simon.setCenterY(simonY);
+	}
 }
