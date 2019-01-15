@@ -100,6 +100,20 @@ public class Map extends Application {
 	Win_zone = false;
 	}
 	}
+	public void Keyroom(Boolean Key_touching, Boolean door_passing, double simonX, double simonY) {
+		if(Simon.getBoundsInParent().intersects(key.getBoundsInParent())) { 
+			Key_touching = true;
+			System.out.println("got the key");
+		}
+		if(Simon.getBoundsInParent().intersects(masterdoor.getBoundsInParent())) {
+			if (Key_touching == true) {
+				door_passing = true;
+			} else if (door_passing == false) {
+				System.out.println("get a key");
+			}
+
+		}
+	}
 	public void Baddy(double enemyY, double simonX, double simonY) {
 		if (enemyY <= 150) {
 			enemyY += 3;
