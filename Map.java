@@ -15,7 +15,10 @@ import javafx.scene.image.*;
 public class Map extends Application {
 	double simonX;
 	double simonY;
+	double enemyX;
+	double enemyY;
 	public Circle Simon;
+	public Rectangle enemy;
 	public Scene map;
 	public ImageView key;
 	public ImageView masterdoor;
@@ -41,8 +44,11 @@ public class Map extends Application {
 		masterdoor.setY(442);
 		simonX = 30;
 		simonY = 30;
+		enemyX = 200;
+		enemyY = 10;
 		map.setFill(Color.TURQUOISE);
 		Rectangle stage = new Rectangle(10,10,480,480);
+		enemy = new Rectangle(enemyX,enemyY,30,30);
 		Rectangle end = new Rectangle(420,440,70,50);
 		end.setFill(Color.GOLD);
 		stage.setFill(Color.WHITE);
@@ -94,4 +100,13 @@ public class Map extends Application {
 	Win_zone = false;
 	}
 	}
+	public void Baddy(double enemyY, double simonX, double simonY) {
+		if (enemyY <= 150) {
+			enemyY += 3;
+		}
+		if (enemyY >= 150) {
+			enemyY -= 3;
+		}
+	}
+}
 }
