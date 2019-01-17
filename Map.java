@@ -22,10 +22,12 @@ public class Map extends Application {
 	private ImageView trap1;
 	private Boolean Key_touching = false;
 	private Boolean door_passing = false;
+	private Boolean door_passingmessage = false;
 	private Boolean Trapdeath;
 	private Boolean Win_zone = false;
 	private Group root;
-
+	private Boolean move = true;
+	private Rectangle end;
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -46,7 +48,7 @@ public class Map extends Application {
 		simonY = 30;
 		map.setFill(Color.TURQUOISE);
 		Rectangle stage = new Rectangle(10, 10, 480, 480);
-		Rectangle end = new Rectangle(420, 440, 70, 50);
+		end = new Rectangle(420, 440, 70, 50);
 		end.setFill(Color.GOLD);
 		stage.setFill(Color.WHITE);
 		Simon = new Circle(simonX, simonY, 15);
@@ -59,21 +61,21 @@ public class Map extends Application {
 		Line room2 = new Line(490, 150, 148, 442);
 		root.getChildren().addAll(stage, end, Simon, trap1, key, room1, room1pt2, keyroom, keyroompt2, keyroompt3,
 				room2, masterdoor);
-
-		map.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		
+		
+			map.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.W)
+				if (event.getCode() == KeyCode.W && move == true)
 					simonY -= 3;
-				else if (event.getCode() == KeyCode.S)
+				else if (event.getCode() == KeyCode.S && move == true)
 					simonY += 3;
-				else if (event.getCode() == KeyCode.D)
+				else if (event.getCode() == KeyCode.D && move == true)
 					simonX += +3;
-				else if (event.getCode() == KeyCode.A)
+				else if (event.getCode() == KeyCode.A && move == true)
 					simonX -= 3;
 			}
 		});
-
 		AnimationTimer timer = new AnimationTimer() {
 			public void handle(long arg0) {
 				upDate();
@@ -90,20 +92,19 @@ public class Map extends Application {
 		Simon.setCenterX(simonX);
 		Simon.setCenterY(simonY);
 		Win(simonX, simonY);
-		Keyroom(simonX, simonY);
+		Keyroom (simonY);
 		Trap(simonX,simonY);
 	}
 
 	public void Win(double simonX, double simonY) {
 		if (!Win_zone)
-			if (simonX >= 420 && simonY >= 440) {
-				Win_zone = true;
-			}else if (Win_zone == true) {
+		if (Simon.getBoundsInParent().intersects(end.getBoundsInParent())) {
+			Win_zone = true;
 			System.out.println("Nice");
 		}
 	}
 
-	public void Keyroom(double simonX, double simonY) {
+	public void Keyroom(double simonY) {
 		if (!Key_touching)
 			if (Simon.getBoundsInParent().intersects(key.getBoundsInParent())) {
 				Key_touching = true;
@@ -114,15 +115,22 @@ public class Map extends Application {
 				if (Key_touching == true) {
 					door_passing = true;
 					root.getChildren().get(11).setVisible(false);
-				} else if (door_passing == false) {
+				} else if (!door_passingmessage) 
+					 if (door_passing == false) {
+						 door_passingmessage = true;
 						System.out.println("get a key");
+						move = false;
+						simonX-=10;
+						move = true;
 					}
 			}
 	}
+
 	public void Trap(double simonX, double simonY) {
-		if (Simon.getBoundsInParent().intersects(trap1.getBoundsInParent())){
-		System.out.println("You're dead");
-		root.getChildren().get(2).setVisible(false);
+		if (Simon.getBoundsInParent().intersects(trap1.getBoundsInParent())) {
+			System.out.println("You're dead");
+			root.getChildren().get(2).setVisible(false);
+
 		}
 	}
 }
