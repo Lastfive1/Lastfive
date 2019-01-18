@@ -40,18 +40,18 @@ public class Map extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		root = new Group();
 		map = new Scene(root, 500, 500);
-		key = new ImageView(new Image("key.png"));
-		masterdoor = new ImageView(new Image("door1.jpg"));
+		key = new ImageView(new Image("key1.jpg"));
+		masterdoor = new ImageView(new Image("door.jpg"));
 		trap1 = new ImageView(new Image("sportnite.png"));
 		trap2 = new ImageView(new Image("sportnite.png"));
 		trap1.setX(300);
-		trap1.setY(80);
+		trap1.setY(75);
 		trap2.setX(350);
 		trap2.setY(450);
 		key.setX(20);
 		key.setY(160);
 		masterdoor.setX(130);
-		masterdoor.setY(453);
+		masterdoor.setY(442);
 		simonX = 30;
 		simonY = 30;
 		BaddyX = 150;
@@ -70,11 +70,10 @@ public class Map extends Application {
 		Line keyroompt2 = new Line(90, 200, 100, 200);
 		Line keyroompt3 = new Line(100, 150, 100, 200);
 		Line room2 = new Line(490, 150, 153, 447);
-		root.getChildren().addAll(stage, end, Simon, trap1,trap2, key, room1, room1pt2, keyroom, keyroompt2, keyroompt3,
-				room2, masterdoor,Baddy);
-		while ((BaddyY + 50) <= 150) {
-			BaddyY += 3;
-		}
+		root.getChildren().addAll(stage, end, Simon, trap1,trap2, key, room1, room1pt2, keyroom, keyroompt2, keyroompt3,room2, masterdoor,Baddy);
+		
+		
+		
 		map.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
@@ -106,6 +105,12 @@ public class Map extends Application {
 		Win(simonX, simonY);
 		Keyroom(simonY);
 		Trap(simonX, simonY);
+		if ((BaddyY + 50) <= 150) {
+			BaddyY += 1;
+		} else {
+		BaddyY -=100;	
+		Baddy.setY(BaddyY);
+		}
 	}
 
 	public void Win(double simonX, double simonY) {
