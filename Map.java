@@ -15,19 +15,24 @@ import javafx.scene.image.*;
 public class Map extends Application {
 	double simonX;
 	double simonY;
+	double BaddyX;
+	double BaddyY;
 	private Circle Simon;
 	private Scene map;
 	private ImageView key;
 	private ImageView masterdoor;
 	private ImageView trap1;
+	private ImageView trap2;
 	private Boolean Key_touching = false;
 	private Boolean door_passing = false;
 	private Boolean door_passingmessage = false;
-	private Boolean Trapdeath;
 	private Boolean Win_zone = false;
 	private Group root;
 	private Boolean move = true;
 	private Rectangle end;
+	private Rectangle Baddy;
+	private Boolean trapdeathmessage = false;
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -35,19 +40,25 @@ public class Map extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		root = new Group();
 		map = new Scene(root, 500, 500);
-		key = new ImageView(new Image("key1.jpg"));
-		masterdoor = new ImageView(new Image("door.jpg"));
+		key = new ImageView(new Image("key.png"));
+		masterdoor = new ImageView(new Image("door1.jpg"));
 		trap1 = new ImageView(new Image("sportnite.png"));
-		trap1.setX(400);
-		trap1.setY(100);
+		trap2 = new ImageView(new Image("sportnite.png"));
+		trap1.setX(300);
+		trap1.setY(80);
+		trap2.setX(350);
+		trap2.setY(450);
 		key.setX(20);
 		key.setY(160);
 		masterdoor.setX(130);
-		masterdoor.setY(442);
+		masterdoor.setY(453);
 		simonX = 30;
 		simonY = 30;
+		BaddyX = 150;
+		BaddyY = 10;
 		map.setFill(Color.TURQUOISE);
 		Rectangle stage = new Rectangle(10, 10, 480, 480);
+		Baddy = new Rectangle(BaddyX,BaddyY,50,50);
 		end = new Rectangle(420, 440, 70, 50);
 		end.setFill(Color.GOLD);
 		stage.setFill(Color.WHITE);
@@ -58,12 +69,13 @@ public class Map extends Application {
 		Line keyroom = new Line(10, 200, 30, 200);
 		Line keyroompt2 = new Line(90, 200, 100, 200);
 		Line keyroompt3 = new Line(100, 150, 100, 200);
-		Line room2 = new Line(490, 150, 148, 442);
-		root.getChildren().addAll(stage, end, Simon, trap1, key, room1, room1pt2, keyroom, keyroompt2, keyroompt3,
-				room2, masterdoor);
-		
-		
-			map.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		Line room2 = new Line(490, 150, 153, 447);
+		root.getChildren().addAll(stage, end, Simon, trap1,trap2, key, room1, room1pt2, keyroom, keyroompt2, keyroompt3,
+				room2, masterdoor,Baddy);
+		while ((BaddyY + 50) <= 150) {
+			BaddyY += 3;
+		}
+		map.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
 				if (event.getCode() == KeyCode.W && move == true)
@@ -87,21 +99,21 @@ public class Map extends Application {
 		primaryStage.setScene(map);
 		primaryStage.show();
 	}
-
 	public void upDate() {
 		Simon.setCenterX(simonX);
 		Simon.setCenterY(simonY);
+		Baddy.setY(BaddyY);
 		Win(simonX, simonY);
-		Keyroom (simonY);
-		Trap(simonX,simonY);
+		Keyroom(simonY);
+		Trap(simonX, simonY);
 	}
 
 	public void Win(double simonX, double simonY) {
 		if (!Win_zone)
-		if (Simon.getBoundsInParent().intersects(end.getBoundsInParent())) {
-			Win_zone = true;
-			System.out.println("Nice");
-		}
+			if (Simon.getBoundsInParent().intersects(end.getBoundsInParent())) {
+				Win_zone = true;
+				System.out.println("Nice");
+			}
 	}
 
 	public void Keyroom(double simonY) {
@@ -109,28 +121,38 @@ public class Map extends Application {
 			if (Simon.getBoundsInParent().intersects(key.getBoundsInParent())) {
 				Key_touching = true;
 				System.out.println("got the key");
-				root.getChildren().get(4).setVisible(false);
+				root.getChildren().get(5).setVisible(false);
 			}
-			if (Simon.getBoundsInParent().intersects(masterdoor.getBoundsInParent())) {
-				if (Key_touching == true) {
-					door_passing = true;
-					root.getChildren().get(11).setVisible(false);
-				} else if (!door_passingmessage) 
-					 if (door_passing == false) {
-						 door_passingmessage = true;
-						System.out.println("get a key");
-						move = false;
-						simonX-=10;
-						move = true;
-					}
-			}
+		if (Simon.getBoundsInParent().intersects(masterdoor.getBoundsInParent())) {
+			if (Key_touching == true) {
+				door_passing = true;
+				root.getChildren().get(12).setVisible(false);
+			} else if (!door_passingmessage)
+				if (door_passing == false) {
+					door_passingmessage = true;
+					System.out.println("get a key");
+					move = false;
+					simonX -= 10;
+					move = true;
+					door_passingmessage = false;
+				}
+		}
 	}
 
 	public void Trap(double simonX, double simonY) {
-		if (Simon.getBoundsInParent().intersects(trap1.getBoundsInParent())) {
-			System.out.println("You're dead");
-			root.getChildren().get(2).setVisible(false);
+		if (!trapdeathmessage)
+			if (Simon.getBoundsInParent().intersects(trap1.getBoundsInParent())) {
+				trapdeathmessage = true;
+				System.out.println("You're dead");
+				root.getChildren().get(2).setVisible(false);
 
-		}
+			}
+		if (!trapdeathmessage)
+			if (Simon.getBoundsInParent().intersects(trap2.getBoundsInParent())) {
+				trapdeathmessage = true;
+				System.out.println("You're dead");
+				root.getChildren().get(2).setVisible(false);
+
+			}
 	}
 }
